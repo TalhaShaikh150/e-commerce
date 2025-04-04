@@ -1,4 +1,3 @@
-// DOM Elements
 const Products = document.querySelector(".products-grid");
 const totalPriceElement = document.querySelector(".total-price");
 const cartQuantity = document.querySelector(".cart-count");
@@ -6,14 +5,14 @@ const itemQuantity = document.querySelector(".item-quantity");
 const cartIcon = document.querySelector(".cart-icon");
 const cartSlider = document.querySelector(".cart-slider");
 const closeCart = document.querySelector(".close-cart");
-const emptycartLabel = document.querySelector('.empty-cart-label')
-const checkoutBtn = document.querySelector(".checkout-btn")
-console.log(checkoutBtn)
-const shoppingBtn = document.querySelector(".shoping-btn")
-let cartItems = document.querySelector(".cart-items")
-// Product Data
+const emptycartLabel = document.querySelector('.empty-cart-label');
+const checkoutBtn = document.querySelector(".checkout-btn");
+const shoppingBtn = document.querySelector(".shoping-btn");
+let cartItems = document.querySelector(".cart-items");
+
 const data = [
   {
+    id:1,
     image: "assets/product-1.png",
     badge: "New Arrival",
     category: "Automatic",
@@ -27,6 +26,7 @@ const data = [
     price: 2000,
   },
   {
+    id:2,
     image: "assets/product-2.png",
     badge: "New Arrival",
     category: "Analog",
@@ -40,6 +40,7 @@ const data = [
     price: 200,
   },
   {
+    id:3,
     image: "assets/product-3.png",
     badge: "New Arrival",
     category: "Analog",
@@ -53,6 +54,7 @@ const data = [
     price: 400,
   },
   {
+    id:4,
     image: "assets/product-4.png",
     badge: "New Arrival",
     category: "Analog",
@@ -66,6 +68,7 @@ const data = [
     price: 800,
   },
   {
+    id:5,
     image: "assets/product-5.png",
     badge: "New Arrival",
     category: "Analog",
@@ -79,6 +82,7 @@ const data = [
     price: 800,
   },
   {
+    id:6,
     image: "assets/product-6.png",
     badge: "New Arrival",
     category: "Analog",
@@ -93,13 +97,11 @@ const data = [
   },
 ];
 
-// Initialize variables
 let totalPriceValue = 0;
 const cartOverlay = document.createElement("div");
 cartOverlay.className = "cart-overlay";
 document.body.appendChild(cartOverlay);
 
-// Generate Product Cards
 function generateProductCards() {
   for (let i = 0; i < data.length; i++) {
     Products.innerHTML += `
@@ -127,66 +129,60 @@ function generateProductCards() {
   }
 }
 
-
-// Setup Add to Cart Buttons
 function setupCartButtons() {
   document.querySelectorAll(".product-cta").forEach((cartBtn, index) => {
     const cartMessage = cartBtn.previousElementSibling;
 
-    
-  
+    cartBtn.addEventListener("click", function () {
+      const productPrice = data[index].price;
+      emptycartLabel.classList.add("none");
+      shoppingBtn.classList.add("none");
+      checkoutBtn.classList.add("visible");
 
-cartBtn.addEventListener("click", function () {
-  const productPrice = data[index].price;
-  emptycartLabel.classList.add("none")
-  shoppingBtn.classList.add("none")
-  checkoutBtn.classList.add("visible")
-  cartItems.innerHTML += `
-  <div class="cart-item">
-    <div class="cart-item-img">
-      <img src="${data[index].image}" width="80">
-    </div>
-    <div class="cart-item-details">
-      <h4>${data[index].name}</h4>
-      <p class="cart-item-price">Rs ${data[index].price}</p>
-      <div class="cart-item-controls">
-        <button class="quantity-btn">-</button>
-        <span class="quantity">1</span>
-        <button class="quantity-btn">+</button>
-        <button class="remove-item">Remove</button>
-      </div>
-    </div>
-  </div>     
-  `
-  document.querySelectorAll(".remove-item").forEach(removeBtn =>{
-    removeBtn.addEventListener('click',function(e){
-      e.target.closest('.cart-item').remove();
+      cartItems.innerHTML += `
+        <div class="cart-item">
+          <div class="cart-item-img">
+            <img src="${data[index].image}" width="80">
+          </div>
+          <div class="cart-item-details">
+            <h4>${data[index].name}</h4>
+            <p class="cart-item-price">Rs ${data[index].price}</p>
+            <div class="cart-item-controls">
+              <button class="quantity-btn">-</button>
+              <span class="quantity">1</span>
+              <button class="quantity-btn">+</button>
+              <button class="remove-item">Remove</button>
+            </div>
+          </div>
+        </div>`;
+     
+          document.querySelectorAll(".remove-item").forEach(removeBtn => {
+        removeBtn.addEventListener('click', function(e) {
+          e.target.closest('.cart-item').remove();
+          if (cartItems.children.length === 0) {
+            emptycartLabel.classList.remove("none");
+            shoppingBtn.classList.remove("none");
+            checkoutBtn.classList.remove("visible");
 
-    })
-  })
+          }
+        });
+      });
 
-
-      // Update cart quantities
       cartQuantity.innerHTML++;
       itemQuantity.innerHTML++;
-
-      // Update total price
       totalPriceValue += productPrice;
       totalPriceElement.innerHTML = `Rs ${totalPriceValue}`;
-
-      // Show/hide added message
       cartMessage.classList.add("cart-message-visible");
       cartBtn.style.display = "none";
 
       setTimeout(() => {
         cartBtn.style.display = "block";
         cartMessage.classList.remove("cart-message-visible");
-      }, 2000);
+      }, 1000);
     });
   });
 }
 
-// Initialize Cart Toggle
 function initCartToggle() {
   cartIcon.addEventListener("click", () => {
     cartSlider.classList.add("active");
@@ -199,7 +195,6 @@ function initCartToggle() {
   });
 }
 
-// Initialize App
 document.addEventListener("DOMContentLoaded", function () {
   generateProductCards();
   setupCartButtons();
